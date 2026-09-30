@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../components/editor.dart';
 import '../../models/transferencia.dart';
+import '../../database/app_database.dart';
 
 
 class FormularioTransferencia extends StatefulWidget {
@@ -76,7 +77,19 @@ void _criaTransferencia(
 
   if (numeroConta != null && valor != null) {
     final transferenciaCriada = Transferencia(valor, numeroConta);
+
     debugPrint('$transferenciaCriada'); // Teste de saída no console
-    Navigator.pop(context, transferenciaCriada);
+
+    salvarTransferencia(transferenciaCriada).then((id){
+      debugPrint('Transferência salva com id: $id');
+
+      if (!context.mounted) return;
+
+      Navigator.pop(context, transferenciaCriada);
+
+    });
+
+
+    
   }
 }

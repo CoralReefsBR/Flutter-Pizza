@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'screens/transferencias/lista.dart';
 import 'package:intl/intl.dart';
+import 'database/app_database.dart';
+import './screens/dashboard.dart';
 
-void main() => runApp(BankApp());
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await testeBanco();
+
+  runApp(BankApp());
+}
 
 class BankApp extends StatelessWidget {
   const BankApp({super.key});
@@ -11,6 +18,7 @@ class BankApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Intl.defaultLocale = "pt_BR";
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         // Ativa o estilo Material 3, mais atual e com suporte aos widgets modernos
         useMaterial3: true,
@@ -30,7 +38,7 @@ class BankApp extends StatelessWidget {
           foregroundColor: Colors.white, // Texto e ícones na AppBar
           titleTextStyle: const TextStyle(
             fontSize: 20,
-            fontWeight: FontWeight.bold,            
+            fontWeight: FontWeight.bold,
           ),
         ),
 
@@ -57,8 +65,9 @@ class BankApp extends StatelessWidget {
         inputDecorationTheme: const InputDecorationTheme(
           border: OutlineInputBorder(), // Define borda padrão
         ),
-      ),
-      home: ListaTransferencias(),
+      ),    
+
+      home: Dashboard(),
     );
   }
 }

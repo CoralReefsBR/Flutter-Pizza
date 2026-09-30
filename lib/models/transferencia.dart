@@ -1,5 +1,3 @@
-
-
 class Transferencia {
   final double valor;
   final int numeroConta;
