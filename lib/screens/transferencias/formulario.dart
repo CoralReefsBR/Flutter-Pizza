@@ -33,7 +33,7 @@ class _FormularioPedidoState extends State<FormularioPedido> {
       return;
     }
 
-    Navigator.pop(context, PedidoPizzaria(valor, mesa));
+    Navigator.pop(context, PedidoPizzaria(valor: valor, numeroMesa: mesa));
   }
 
   @override

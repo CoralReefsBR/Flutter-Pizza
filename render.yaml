@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: flutter-pizza-api
+    runtime: node
+    plan: free
+    region: ohio
+    rootDir: api
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PGSSL
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: flutter-pizza-db
+          property: connectionString
+
+databases:
+  - name: flutter-pizza-db
+    databaseName: pizzaria
+    user: pizzaria
+    plan: free
+    region: ohio

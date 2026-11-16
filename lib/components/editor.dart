@@ -7,7 +7,7 @@ class Editor extends StatelessWidget {
   final IconData? icone;
   final TextInputType tipoTeclado;
 
-  Editor({
+  const Editor({
     super.key,
     this.controlador,
     this.rotulo,
