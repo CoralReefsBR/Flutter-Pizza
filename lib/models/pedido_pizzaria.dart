@@ -43,9 +43,10 @@ class PedidoPizzaria {
       };
 
   factory PedidoPizzaria.fromApiJson(Map<String, dynamic> json) => PedidoPizzaria(
-        remoteId: json['id'] as int?,
-        valor: (json['valor'] as num).toDouble(),
-        numeroMesa: (json['numero_mesa'] ?? json['numeroMesa']) as int,
+        remoteId: int.tryParse('${json['id']}'),
+        // PostgreSQL NUMERIC and BIGINT values are commonly serialized as strings.
+        valor: double.parse('${json['valor']}'),
+        numeroMesa: int.parse('${json['numero_mesa'] ?? json['numeroMesa']}'),
         sincronizado: true,
       );
 }

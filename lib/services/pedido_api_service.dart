@@ -7,7 +7,7 @@ class PedidoApiService {
   final http.Client _client;
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'https://configure-api-url.example.com',
+    defaultValue: 'https://flutter-pizza-api.onrender.com',
   );
 
   Uri get _pedidosUri => Uri.parse('$baseUrl/pedidos');

@@ -14,6 +14,7 @@ class _ListaPedidosState extends State<ListaPedidos> {
   final _repository = PedidoRepository();
   List<PedidoPizzaria> _pedidos = [];
   bool _carregando = true;
+  String? _erro;
 
   @override
   void initState() {
@@ -22,9 +23,31 @@ class _ListaPedidosState extends State<ListaPedidos> {
   }
 
   Future<void> _carregar() async {
-    final pedidos = await _repository.listar();
-    if (!mounted) return;
-    setState(() { _pedidos = pedidos; _carregando = false; });
+    try {
+      final locais = await _repository.listarLocal();
+      if (!mounted) return;
+      setState(() {
+        _pedidos = locais;
+        _carregando = false;
+        _erro = null;
+      });
+
+      // Atualiza com a API depois de exibir imediatamente os dados locais.
+      try {
+        await _repository.atualizarDoServidor();
+        final atualizados = await _repository.listarLocal();
+        if (!mounted) return;
+        setState(() => _pedidos = atualizados);
+      } catch (_) {
+        // A lista local continua utilizável quando a API estiver indisponível.
+      }
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _carregando = false;
+        _erro = 'Não foi possível abrir o banco local: $error';
+      });
+    }
   }
 
   Future<void> _abrirFormulario() async {
@@ -56,6 +79,14 @@ class _ListaPedidosState extends State<ListaPedidos> {
           icon: Badge(isLabelVisible: pendentes > 0, label: Text('$pendentes'), child: const Icon(Icons.sync))),
       ]),
       body: _carregando ? const Center(child: CircularProgressIndicator())
+        : _erro != null ? Center(child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Text(_erro!, textAlign: TextAlign.center),
+              const SizedBox(height: 12),
+              ElevatedButton(onPressed: _carregar, child: const Text('Tentar novamente')),
+            ]),
+          ))
         : _pedidos.isEmpty ? const Center(child: Text('Nenhum pedido cadastrado'))
         : RefreshIndicator(onRefresh: _carregar, child: ListView.builder(
             padding: const EdgeInsets.only(bottom: 88), itemCount: _pedidos.length,
